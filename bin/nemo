@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require_relative '../lib/nemo/interfaces/cli'
+
+Nemo::Interfaces::CLI.run
