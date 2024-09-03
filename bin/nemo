@@ -1,4 +1,20 @@
 #!/usr/bin/env ruby
 require_relative '../lib/nemo/interfaces/cli'
 
-Nemo::Interfaces::CLI.run
+base_path = Dir.pwd
+cli = Nemo::Interfaces::CLI.new(base_path)
+cli.run(ARGV)
+
+# Assume ARGV[0] is the command, and other ARGV are parameters
+# command = ARGV[0]
+# project_name = ARGV[1]
+# class_name = ARGV[2]
+# model_name = ARGV[3]
+# module_name = ARGV[4]
+
+# case command
+# when 'create'
+#   cli.create_project(project_name, class_name, model_name, module_name)
+# else
+#   puts "Unknown command: #{command}"
+# end

@@ -1,18 +1,23 @@
 require 'optparse'
-require 'colorize'
-require_relative '../application/create_project'
-# require_relative '../application/create_viper_scene'
-require_relative '../application/show_info'
+require_relative '../application/create_project_use_case'
+require_relative '../application/create_viper_scene_use_case'
+require_relative '../application/show_info_use_case'
+require_relative '../utilities/string_extensions.rb'
 
 module Nemo
     module Interfaces
         class CLI
-            def self.run
+
+            def initialize(base_path)
+                @base_path = base_path
+            end
+
+            def run(argv)
                 options = {}
                 opt_parser = OptionParser.new do |opts|
                     opts.banner = "Usage: nemo [options]"
 
-                    opts.on("-c", "--create PROJECT_NAME", "Create a new iOS project") do |name|
+                    opts.on("-c PROJECT_NAME", "--create PROJECT_NAME", "Create a new iOS project") do |name|
                         options[:command] = :create
                         options[:project_name] = name
                     end
@@ -25,26 +30,26 @@ module Nemo
                     opts.on("-v", "--version", "Show script version") do
                         options[:command] = :info
                     end
-                end
+                end.parse!(argv)
+
                 
                 case options[:command]
                 when :create
-                    if options[:scene_name]
-                        Nemo::Application::CreateViperScene.new(options[:scene_name]).execute
+                    if options[:project_name]
+                        Nemo::Application::CreateProjectUseCase.new(@base_path, options[:project_name]).execute
                     else
-                        puts "Error: Project name is required for the 'create' command.".colorize(:color => :red, :mode => :bold)
+                        puts "Error: Project name is required for the 'create' command.".colorize(:red).style(:bold)
                     end
                 when :scene
                     if options[:scene_name]
-                        #Nemo::Application::CreateViperScene.new(options[:scene_name]).execute
+                        Nemo::Application::CreateViperSceneUseCase.new(options[:scene_name]).execute
                     else
-                        puts "Error: Scene name is required for the 'viper' command.".colorize(:color => :red, :mode => :bold)
+                        puts "Error: Scene name is required for the 'viper' command.".colorize(:red).style(:bold)
                     end
                 when :info
-                    Nemo::Application::ShowInfo.new.execute
+                    Nemo::Application::ShowInfoUseCase.new.execute
                 else
-                    puts "Error: Unknown command.".colorize(:color => :red, :mode => :bold)
-                    Nemo::Application::ShowInfo.new.execute
+                    Nemo::Application::ShowInfoUseCase.new.execute
                 end
             end
         end

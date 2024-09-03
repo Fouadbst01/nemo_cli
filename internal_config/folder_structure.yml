@@ -1,0 +1,13 @@
+Extension:
+Common:
+  Enums:
+  Router:
+  DI:
+  Networking:
+    Headers:
+    NetworkManger:
+  Views:
+    LoaderView:
+Scenes:
+Resources:
+  Fonts:

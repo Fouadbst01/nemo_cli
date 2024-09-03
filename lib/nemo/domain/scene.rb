@@ -1,6 +1,6 @@
 module Nemo
     module Domain
-        class Project
+        class Scene
             attr_accessor :name
 
             def initialize(name)

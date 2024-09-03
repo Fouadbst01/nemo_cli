@@ -2,34 +2,7 @@ require_relative '../utilities/string_extensions.rb'
 
 module Nemo
     module Application
-        class ShowInfo
-            def execute
-                puts <<~ASCII_ART.colorize(:cyan)
-
-                ███    ██ ███████ ███    ███  ██████  
-                ████   ██ ██      ████  ████ ██    ██ 
-                ██ ██  ██ █████   ██ ████ ██ ██    ██ 
-                ██  ██ ██ ██      ██  ██  ██ ██    ██ 
-                ██   ████ ███████ ██      ██  ██████  
-                                            
-                ASCII_ART
-                puts "Nemo script version 1.0".colorize(:cyan)
-                puts "A command-line tool designed to create iOS projects structured with VIPER architecture.".colorize(:green)
-                puts ""
-                puts "Usage:".style(:bold)
-                puts "  nemo [command] [options]"
-                puts ""
-                puts "Commands:".style(:bold)
-                puts "  \033[33m{-c, --create PROJECT_NAME}\033[0m   Create a new iOS project with the specified name."
-                puts "  \033[33m-s, --scene SCENE_NAME\033[0m      Create a new VIPER scene with the specified name."
-                puts "  \033[33m-i, --info\033[0m                  Show script information and usage."
-                puts ""
-                puts "Examples:".style(:bold)
-                
-                puts ""
-                
-            end
-
+        class ShowInfoUseCase
             def execute
                 print_header
                 print_usage
@@ -42,12 +15,14 @@ module Nemo
     
             def print_header
                 puts <<~ASCII_ART.colorize(:cyan)
-
-                ███    ██ ███████ ███    ███  ██████  
-                ████   ██ ██      ████  ████ ██    ██ 
-                ██ ██  ██ █████   ██ ████ ██ ██    ██ 
-                ██  ██ ██ ██      ██  ██  ██ ██    ██ 
-                ██   ████ ███████ ██      ██  ██████                    
+                
+                ███╗   ██╗███████╗███╗   ███╗ ██████╗ 
+                ████╗  ██║██╔════╝████╗ ████║██╔═══██╗
+                ██╔██╗ ██║█████╗  ██╔████╔██║██║   ██║
+                ██║╚██╗██║██╔══╝  ██║╚██╔╝██║██║   ██║
+                ██║ ╚████║███████╗██║ ╚═╝ ██║╚██████╔╝
+                ╚═╝  ╚═══╝╚══════╝╚═╝     ╚═╝ ╚═════╝ 
+                
                 ASCII_ART
                 puts "Nemo script version 1.0".colorize(:cyan).style(:bold)
                 puts "A command-line tool for creating iOS projects with VIPER architecture".colorize(:green)
