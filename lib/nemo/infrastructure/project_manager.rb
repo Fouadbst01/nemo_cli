@@ -30,14 +30,24 @@ module Nemo
             test_target_name = "#{project_name}Tests"
             test_target = project.new_target(:unit_test_bundle, test_target_name, :ios, '14.0')
 
+            # Set the host application
+            test_target.build_configuration_list.build_configurations.each do |config|
+            config.build_settings['TEST_HOST'] = "$(BUILT_PRODUCTS_DIR)/#{target.name}.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/#{target.name}"
+            config.build_settings['BUNDLE_LOADER'] = "$(TEST_HOST)"
+            end
+
+            # Add TestTargetID in the TargetAttributes section
+            project.root_object.attributes['TargetAttributes'] ||= {}
+            project.root_object.attributes['TargetAttributes'][test_target.uuid] = { 'TestTargetID' => target.uuid }
+
             # Set the project bundle identifier
             bundle_identifier = "com.nemo.#{project_name}"
             project.build_configuration_list.set_setting('PRODUCT_BUNDLE_IDENTIFIER', bundle_identifier)
 
-            # set version
+            # Set version
             project.build_configuration_list.set_setting('MARKETING_VERSION', '1.0')
 
-            # set build number
+            # Set build number
             project.build_configuration_list.set_setting('CURRENT_PROJECT_VERSION', '1')
             
             # Set the project to use Swift
@@ -46,14 +56,14 @@ module Nemo
             # Set launch screen
             project.build_configuration_list.set_setting('INFOPLIST_KEY_UILaunchStoryboardName', 'LaunchScreen')
         
-            # Set the development team and deployment target (optional)
+            # Set the development team and deployment target
             target.build_configuration_list.set_setting('DEVELOPMENT_TEAM', '')
             target.build_configuration_list.set_setting('IPHONEOS_DEPLOYMENT_TARGET', '14.0')
 
-            #set user defined
+            # Set user defined
             target.build_configuration_list.set_setting('BASE_URL', 'https://api.spacexdata.com/v5/')
 
-            # add packages 
+            # Add packages 
             add_packages()
 
             save_project
@@ -64,9 +74,9 @@ module Nemo
             return main_group
         end
 
-        def add_file_to_group(file_path, group, build_phase_type = nil)
+        def add_file_to_group(file_path, group, build_phase_type = nil, isTestFile = false)
             file_reference = group.new_file(file_path)
-            add_to_build_phase(file_reference, build_phase_type) if build_phase_type
+            add_to_build_phase(file_reference, build_phase_type, isTestFile) if build_phase_type
 
             save_project
         end
@@ -166,8 +176,12 @@ module Nemo
             save_project
         end
           
-        def add_to_build_phase(file_reference, build_phase_type)
-            target = @project.targets.first
+        def add_to_build_phase(file_reference, build_phase_type, isTestFile)
+            if isTestFile
+                target = @project.targets.find { |target| target.name.include? "Tests" }
+            else
+                target = @project.targets.find { |target| !target.name.include?("Tests") }
+            end
             case build_phase_type
             when :source
                 target.source_build_phase.add_file_reference(file_reference)

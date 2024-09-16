@@ -31,6 +31,9 @@ module Nemo
       DEFAULT_RESPONSE_CONTENT_FILE_NAME = "Scene/Model/Response/LaunchResponse.swift"
       DEFAULT_VIEWMODEL_CONTENT_FILE_NAME = "Scene/ViewModel/LancheViewModel.swift"
       DEFAULT_ROUTER_CONTENT_FILE_NAME = "Scene/Router/Router.swift"
+
+      MOCK_URLPROTOCOL_CONTENT_FILE_NAME = "tests/network/MockURLProtocol.swift"
+      MOCK_NETWORK_MANAGER_CONTENT_FILE_NAME = "tests/network/NetworkManagerMock.swift"
       
 
       private_constant :DEFAULT_FILES, :TEMPLATE_DIR, :VIEW_CONTENT_FILE_NAME, :CONTROLLER_CONTENT_FILE_NAME, \
@@ -65,6 +68,7 @@ module Nemo
           create_file(app_root_group, file_name, file_name, build_phase_type, params)
         end
         add_common_files(app_root_group)
+        add_common_test_files()
       end
 
       def add_common_files(group)
@@ -81,12 +85,21 @@ module Nemo
           { name: "DependencyContainer.swift", template: COMMON_DI_CONTENT_FILE_NAME, group: DI_GROUP_NAME },
           { name: "Enums.swift", template: COMMON_ENUMS_CONTENT_FILE_NAME, group: ENUMS_GROUP_NAME },
         ] 
-        common_files.each do |file|
-          file_name = file[:name]
-          file_template = file[:template]
-          file_group = file[:group]
-          create_file_in_group(group, file_group, file_name, file_template, :source)
-        end
+        add_files_list_to_group(common_files, group)
+      end
+
+      # def create_test_files_for_scene(scene_name)
+      #   global_test_group = @project_manager.get_test_group()
+      #   scene_test_group = find_group(scene_name, test_group)
+      # end
+
+      def add_common_test_files()
+        test_group = @project_manager.get_test_group()
+        test_files = [
+          { name: "MockURLProtocol.swift", template: MOCK_URLPROTOCOL_CONTENT_FILE_NAME, group: NETWORK_TEST_GROUP },
+          { name: "NetworkManagerMock.swift", template: MOCK_NETWORK_MANAGER_CONTENT_FILE_NAME, group: NETWORK_TEST_GROUP }
+        ]
+        add_files_list_to_group(test_files, test_group, true)
       end
 
       def create_default_scene()
@@ -106,12 +119,16 @@ module Nemo
         # create_test_files_for_scene(scene_name)
       end
 
-      # def create_test_files_for_scene(scene_name)
-      #   global_test_group = @project_manager.get_test_group()
-      #   scene_test_group = find_group(scene_name, test_group)
-      # end
-
       private
+
+      def add_files_list_to_group(files, group, isTestFile = false)
+        files.each do |file|
+          file_name = file[:name]
+          file_template = file[:template]
+          file_group = file[:group]
+          create_file_in_group(group, file_group, file_name, file_template, :source, [], isTestFile)
+        end
+      end
 
       def create_response(group)
         create_file_in_group(group, RESPONSE_GROUP_NAME, "LancheResponse.swift", DEFAULT_RESPONSE_CONTENT_FILE_NAME, :source)
@@ -142,16 +159,16 @@ module Nemo
         create_file_in_group(group, ROUTER_GROUP_NAME, "#{scene_name}Router.swift", DEFAULT_ROUTER_CONTENT_FILE_NAME, :source, vc_name: scene_name)
       end
       
-      def create_file_in_group(group, group_name, file_name, content_name, build_phase_type, params = [])
+      def create_file_in_group(group, group_name, file_name, content_name, build_phase_type, params = [], isTestFile = false)
         target_group = find_group(group_name, group)
-        create_file(target_group, file_name, content_name, build_phase_type, params)
+        create_file(target_group, file_name, content_name, build_phase_type, params, isTestFile)
       end
 
-      def create_file(group, file_name, content_name, build_phase_type, params)
+      def create_file(group, file_name, content_name, build_phase_type, params, isTestFile = false)
         file_path = File.join(group.real_path, file_name)
         content = render_template(content_name, params)
         @file_handler.create_file(file_path, content)
-        @project_manager.add_file_to_group(file_path, group, build_phase_type)
+        @project_manager.add_file_to_group(file_path, group, build_phase_type, isTestFile)
       end
       
       def find_group(name, group = nil)

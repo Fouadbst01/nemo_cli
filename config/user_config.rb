@@ -20,6 +20,9 @@ ROUTER_GROUP_NAME = "Router"
 DI_GROUP_NAME = "DI"
 ENUMS_GROUP_NAME = "Enums"
 
+#Tests
+NETWORK_TEST_GROUP = "Network"
+
 #Packages
 PACKAGES = [
     { name: 'Alamofire', url: 'https://github.com/Alamofire/Alamofire.git', version: '5.6.0' },
