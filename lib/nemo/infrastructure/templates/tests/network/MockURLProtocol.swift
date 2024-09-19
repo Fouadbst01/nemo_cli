@@ -19,12 +19,20 @@ class MockURLProtocol: URLProtocol {
             return
         }
         
-        guard MockURLProtocol.requestHandler != nil else {
+        guard let handler = MockURLProtocol.requestHandler else {
             XCTFail("No request handler provided.")
             return
         }
-
-        client?.urlProtocolDidFinishLoading(self)
+        
+        do {
+            let (response, data) = try handler(request)
+            
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            client?.urlProtocol(self, didLoad: data)
+            client?.urlProtocolDidFinishLoading(self)
+        } catch {
+            XCTFail("Error handling the request: \(error)")
+        }
     }
     
     override func stopLoading() {}
