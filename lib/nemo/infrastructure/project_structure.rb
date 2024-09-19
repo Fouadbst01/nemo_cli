@@ -39,7 +39,7 @@ module Nemo
             scene_group_path = File.join(group.real_path, scene_name)
             scene_group = @project_manager.include_folder_in_project(group, scene_name, scene_group_path)
             create_nested_folders(scene_group, structure)
-            create_test_dirs(group, scene_name)
+            # create_test_dirs(group, scene_name)
             return scene_group
         end
         

@@ -34,13 +34,15 @@ module Nemo
 
       MOCK_URLPROTOCOL_CONTENT_FILE_NAME = "tests/network/MockURLProtocol.swift"
       MOCK_NETWORK_MANAGER_CONTENT_FILE_NAME = "tests/network/NetworkManagerMock.swift"
+      BUNDEL_EXTENSION_CONTENT_FILE_NAME = "tests/Helpers/Bundle+JSONLoader.swift"
       
 
       private_constant :DEFAULT_FILES, :TEMPLATE_DIR, :VIEW_CONTENT_FILE_NAME, :CONTROLLER_CONTENT_FILE_NAME, \
                        :INTERACTOR_CONTENT_FILE_NAME, :PRESENTER_CONTENT_FILE_NAME , :NETWORK_MANAGER_CONTENT_FILE_NAME, \
                        :CONSTANTS_CONTENT_FILE_NAME, :LOADER_VIEW_CONTENT_FILE_NAME, :LOADER_VIEW_HELPER_CONTENT_FILE_NAME, \
                        :IMAGE_EXTENSION_CONTENT_FILE_NAME, :UIVIEW_EXTENSION_CONTENT_FILE_NAME, :COMMON_BASE_ROUTER_CONTENT_FILE_NAME, \
-                       :COMMON_DI_CONTENT_FILE_NAME, :COMMON_ENUMS_CONTENT_FILE_NAME, :HEADERS_CONTENT_FILE_NAME
+                       :COMMON_DI_CONTENT_FILE_NAME, :COMMON_ENUMS_CONTENT_FILE_NAME, :HEADERS_CONTENT_FILE_NAME, \
+                       :BUNDEL_EXTENSION_CONTENT_FILE_NAME
 
       def initialize(project_manager)
         @project_manager = project_manager
@@ -97,7 +99,8 @@ module Nemo
         test_group = @project_manager.get_test_group()
         test_files = [
           { name: "MockURLProtocol.swift", template: MOCK_URLPROTOCOL_CONTENT_FILE_NAME, group: NETWORK_TEST_GROUP },
-          { name: "NetworkManagerMock.swift", template: MOCK_NETWORK_MANAGER_CONTENT_FILE_NAME, group: NETWORK_TEST_GROUP }
+          { name: "NetworkManagerMock.swift", template: MOCK_NETWORK_MANAGER_CONTENT_FILE_NAME, group: NETWORK_TEST_GROUP },
+          { name: "Bundle+JSONLoader.swift", template: BUNDEL_EXTENSION_CONTENT_FILE_NAME, group: HELPERS_TEST_GROUP }
         ]
         add_files_list_to_group(test_files, test_group, true)
       end

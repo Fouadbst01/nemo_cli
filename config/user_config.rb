@@ -22,6 +22,7 @@ ENUMS_GROUP_NAME = "Enums"
 
 #Tests
 NETWORK_TEST_GROUP = "Network"
+HELPERS_TEST_GROUP = "Helpers"
 
 #Packages
 PACKAGES = [
